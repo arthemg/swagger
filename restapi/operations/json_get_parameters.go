@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -34,7 +35,7 @@ type JSONGetParams struct {
 	/*Return json repo
 	  In: query
 	*/
-	Jsonrepo *string
+	Jsonrepo []string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -59,20 +60,30 @@ func (o *JSONGetParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 	return nil
 }
 
-// bindJsonrepo binds and validates parameter Jsonrepo from query.
+// bindJsonrepo binds and validates array parameter Jsonrepo from query.
+//
+// Arrays are parsed according to CollectionFormat: "" (defaults to "csv" when empty).
 func (o *JSONGetParams) bindJsonrepo(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
+
+	var qvJsonrepo string
 	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
+		qvJsonrepo = rawData[len(rawData)-1]
 	}
 
-	// Required: false
-	// AllowEmptyValue: false
-	if raw == "" { // empty values pass all other validations
+	// CollectionFormat:
+	jsonrepoIC := swag.SplitByFormat(qvJsonrepo, "")
+	if len(jsonrepoIC) == 0 {
 		return nil
 	}
 
-	o.Jsonrepo = &raw
+	var jsonrepoIR []string
+	for _, jsonrepoIV := range jsonrepoIC {
+		jsonrepoI := jsonrepoIV
+
+		jsonrepoIR = append(jsonrepoIR, jsonrepoI)
+	}
+
+	o.Jsonrepo = jsonrepoIR
 
 	return nil
 }

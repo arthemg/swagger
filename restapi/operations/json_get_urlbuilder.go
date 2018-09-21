@@ -9,11 +9,13 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+
+	"github.com/go-openapi/swag"
 )
 
 // JSONGetURL generates an URL for the Json get operation
 type JSONGetURL struct {
-	Jsonrepo *string
+	Jsonrepo []string
 
 	_basePath string
 	// avoid unkeyed usage
@@ -49,12 +51,21 @@ func (o *JSONGetURL) Build() (*url.URL, error) {
 
 	qs := make(url.Values)
 
-	var jsonrepo string
-	if o.Jsonrepo != nil {
-		jsonrepo = *o.Jsonrepo
+	var jsonrepoIR []string
+	for _, jsonrepoI := range o.Jsonrepo {
+		jsonrepoIS := jsonrepoI
+		if jsonrepoIS != "" {
+			jsonrepoIR = append(jsonrepoIR, jsonrepoIS)
+		}
 	}
-	if jsonrepo != "" {
-		qs.Set("jsonrepo", jsonrepo)
+
+	jsonrepo := swag.JoinByFormat(jsonrepoIR, "")
+
+	if len(jsonrepo) > 0 {
+		qsv := jsonrepo[0]
+		if qsv != "" {
+			qs.Set("jsonrepo", qsv)
+		}
 	}
 
 	result.RawQuery = qs.Encode()

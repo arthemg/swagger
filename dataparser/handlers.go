@@ -69,11 +69,11 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
-func JsonGet(dataSource *DataURLs, urlSource *PingUrl) func(params operations.JSONGetParams) middleware.Responder {
+func JsonGet(dataSource *DataURLs) func(params operations.JSONGetParams) middleware.Responder {
 	var errorMessages = "Wrong URL Address"
-	//var serverError = "There server is down"
+	var serverError = "There server is down"
 	defaultDataSource := dataSource.DataLocation
-	defaultPing := urlSource.URLToPing
+	defaultPing := dataSource.URLToPing
 
 	return func(params operations.JSONGetParams) middleware.Responder {
 		log.Println("params", params.Jsonrepo)
@@ -82,9 +82,10 @@ func JsonGet(dataSource *DataURLs, urlSource *PingUrl) func(params operations.JS
 		log.Println("urlPing",*urlPing)
 
 		if params.Jsonrepo != nil {
-			dataSource = params.Jsonrepo
+			dataSource = &params.Jsonrepo[0]
 			log.Println("dataSource", *dataSource)
-			//urlPing =params.Jsonrepo
+			urlPing = &params.Jsonrepo[1]
+			log.Println("urlPing", *urlPing)
 		}
 
 
@@ -99,13 +100,13 @@ func JsonGet(dataSource *DataURLs, urlSource *PingUrl) func(params operations.JS
 		}
 
 		//Check if the remote server is Up
-		//if !pingCheck("https://api.github.com") {
-		//	return operations.NewJSONGetNotFound().WithPayload(
-		//		&models.ErrorResponse{
-		//			Code:    500,
-		//			Message: &serverError,
-		//		})
-		//}
+		if !pingCheck(*urlPing) {
+			return operations.NewJSONGetNotFound().WithPayload(
+				&models.ErrorResponse{
+					Code:    500,
+					Message: &serverError,
+				})
+		}
 		repos := make(models.Jsonrepo, 0)
 		getJSON(*dataSource, &repos)
 

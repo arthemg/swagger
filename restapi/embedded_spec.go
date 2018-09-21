@@ -41,7 +41,10 @@ func init() {
         "operationId": "JsonGet",
         "parameters": [
           {
-            "type": "string",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Return json repo",
             "name": "jsonrepo",
             "in": "query"
@@ -138,7 +141,10 @@ func init() {
         "operationId": "JsonGet",
         "parameters": [
           {
-            "type": "string",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Return json repo",
             "name": "jsonrepo",
             "in": "query"

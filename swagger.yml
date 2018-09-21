@@ -53,7 +53,9 @@ paths:
         name: jsonrepo
         description: "Return json repo"
         required: false
-        type: string
+        type: array
+        items:
+          type: string
       responses:
         200:
           description: "Returns the list of repos"
