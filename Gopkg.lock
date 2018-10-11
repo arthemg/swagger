@@ -155,15 +155,29 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:500fd233d46dec5d64eaf3acbb0e585262c356947ec499f9d79aaa119ef62088"
+  digest = "1:9f3a60def1a1eb5ac184e71dde43c6f99606f54d106db7c95f8b8338629a777b"
+  name = "github.com/tatsushid/go-fastping"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d7bb493dee3e090e2ffb6914adddf17c1e7c026c"
+
+[[projects]]
+  branch = "master"
+  digest = "1:c32e96d9f3db533c251c34811518691baf0fd314400c7c2d78e281710032f77f"
   name = "golang.org/x/net"
   packages = [
+    "bpf",
     "context",
+    "icmp",
     "idna",
+    "internal/iana",
+    "internal/socket",
+    "ipv4",
+    "ipv6",
     "netutil",
   ]
   pruneopts = "UT"
-  revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
+  revision = "4dfa2610cdf3b287375bbba5b8f2a14d3b01d8de"
 
 [[projects]]
   digest = "1:0c56024909189aee3364b7f21a95a27459f718aa7c199a5c111c36cfffd9eaef"
@@ -223,6 +237,7 @@
     "github.com/go-openapi/swag",
     "github.com/go-openapi/validate",
     "github.com/jessevdk/go-flags",
+    "github.com/tatsushid/go-fastping",
     "golang.org/x/net/netutil",
   ]
   solver-name = "gps-cdcl"

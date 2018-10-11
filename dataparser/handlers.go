@@ -3,25 +3,25 @@ package dataparser
 import (
 	"encoding/json"
 	"fmt"
+	"net"
+	"net/http"
+	"time"
+
 	"github.com/arthemg/dataParser/models"
 	"github.com/arthemg/dataParser/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/tatsushid/go-fastping"
-	"log"
-	"net"
-	"net/http"
-	"time"
 )
 
 const (
-	GitRepoURL     = "https://api.github.com/repositories"
-	GitRepoPingURL = "https://api.github.com"
+	errorMessages = "Wrong URL Address"
+	serverError   = "There server is down"
 )
 
 /*
 	Chekcs the URL against the actual one in case
- */
-func checkUrl(dataSource string) bool {
+*/
+func checkURL(dataSource string) bool {
 	if !(dataSource == "https://api.github.com/repositories") {
 		return false
 	}
@@ -31,7 +31,7 @@ func checkUrl(dataSource string) bool {
 /*
 	Check the remote access point to check if it is responding
 	retuns boolean
- */
+*/
 func pingCheck(dataSource string) bool {
 	p := fastping.NewPinger()
 	ra, err := net.ResolveIPAddr("ip4:icmp", dataSource)
@@ -41,7 +41,7 @@ func pingCheck(dataSource string) bool {
 	}
 	p.AddIPAddr(ra)
 	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
-		fmt.Printf("IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+		fmt.Printf("Server is UP! IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
 	}
 	p.OnIdle = func() {
 		fmt.Println("finish")
@@ -55,7 +55,7 @@ func pingCheck(dataSource string) bool {
 
 /*
 	get data form the remote server to be processed
- */
+*/
 func getJSON(url string, target interface{}) error {
 
 	var httpClient = &http.Client{Timeout: 10 * time.Second}
@@ -69,33 +69,30 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
+//JsonGet gets JSON data from source URL and parses neessary
 func JsonGet(dataSource *DataURLs) func(params operations.JSONGetParams) middleware.Responder {
-	var errorMessages = "Wrong URL Address"
-	var serverError = "There server is down"
+
 	defaultDataSource := dataSource.DataLocation
 	defaultPing := dataSource.URLToPing
 
 	return func(params operations.JSONGetParams) middleware.Responder {
-		log.Println("params", params.Jsonrepo)
+
 		var dataSource = &defaultDataSource
 		var urlPing = &defaultPing
-		log.Println("urlPing",*urlPing)
 
 		if params.Jsonrepo != nil {
 			dataSource = &params.Jsonrepo[0]
-			log.Println("dataSource", *dataSource)
+
 			urlPing = &params.Jsonrepo[1]
-			log.Println("urlPing", *urlPing)
+
 		}
 
-
-
 		//Check if the URL is correct or exists
-		if !checkUrl(*dataSource) {
+		if !checkURL(*dataSource) {
 			return operations.NewJSONGetNotFound().WithPayload(
 				&models.ErrorResponse{
 					Code:    404,
-					Message: &errorMessages,
+					Message: errorMessages,
 				})
 		}
 
@@ -104,7 +101,7 @@ func JsonGet(dataSource *DataURLs) func(params operations.JSONGetParams) middlew
 			return operations.NewJSONGetNotFound().WithPayload(
 				&models.ErrorResponse{
 					Code:    500,
-					Message: &serverError,
+					Message: serverError,
 				})
 		}
 		repos := make(models.Jsonrepo, 0)

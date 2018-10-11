@@ -101,7 +101,6 @@ type Server struct {
 	shuttingDown int32
 	interrupted  bool
 	interrupt    chan os.Signal
-	chanLock     sync.RWMutex
 }
 
 // Logf logs message either via defined user logger or via system one if no user logger is defined.
@@ -496,7 +495,9 @@ func handleInterrupt(once *sync.Once, s *Server) {
 			}
 			s.interrupted = true
 			s.Logf("Shutting down... ")
-			s.Shutdown()
+			if err := s.Shutdown(); err != nil {
+				s.Logf("HTTP server Shutdown: %v", err)
+			}
 		}
 	})
 }
