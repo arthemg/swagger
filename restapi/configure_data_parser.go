@@ -16,7 +16,7 @@ import (
 //go:generate swagger generate server --target .. --name  --spec ../swagger.yml
 var DataURL = dataparser.DataURLs{
 	DataLocation: "https://api.github.com/repositories",
-	URLToPing: "https://api.github.com",
+	URLToPing:    "https://api.github.com",
 }
 
 //var PingUrl = dataparser.PingUrl{
@@ -27,14 +27,14 @@ func configureFlags(api *operations.DataParserAPI) {
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
 		swag.CommandLineOptionsGroup{
 			ShortDescription: "Time Of Day Service Options",
-			Options: &DataURL,
-		//}, {
-		//	ShortDescription: "Url to ping",
-		//	Options: &PingUrl,
-		//},
-	},
-}
+			Options:          &DataURL,
+			//}, {
+			//	ShortDescription: "Url to ping",
+			//	Options: &PingUrl,
+			//},
+		},
 	}
+}
 
 func configureAPI(api *operations.DataParserAPI) http.Handler {
 	// configure the api here
@@ -50,7 +50,7 @@ func configureAPI(api *operations.DataParserAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.JSONGetHandler = operations.JSONGetHandlerFunc(dataparser.JsonGet(&DataURL))
+	api.JSONGetHandler = operations.JSONGetHandlerFunc(dataparser.JSONGet(&DataURL))
 
 	api.ServerShutdown = func() {}
 

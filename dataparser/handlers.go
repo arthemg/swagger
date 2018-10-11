@@ -69,9 +69,8 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
-//JsonGet gets JSON data from source URL and parses neessary
-func JsonGet(dataSource *DataURLs) func(params operations.JSONGetParams) middleware.Responder {
-
+//JSONGet gets JSON data from source URL and parses neessary
+func JSONGet(dataSource *DataURLs) func(params operations.JSONGetParams) middleware.Responder {
 	defaultDataSource := dataSource.DataLocation
 	defaultPing := dataSource.URLToPing
 
