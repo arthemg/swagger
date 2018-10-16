@@ -22,7 +22,7 @@ type ErrorResponse struct {
 
 	// message
 	// Required: true
-	Message string `json:"message"`
+	Message *string `json:"message"`
 }
 
 // Validate validates this error response

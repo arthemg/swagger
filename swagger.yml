@@ -4,7 +4,6 @@ info:
   description: Json Data parser
   title: Data Parser
   version: 0.1.0
-paths: {}
 produces:
 - application/json
 schemes:

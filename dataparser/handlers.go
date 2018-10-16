@@ -13,10 +13,10 @@ import (
 	"github.com/tatsushid/go-fastping"
 )
 
-const (
-	errorMessages = "Wrong URL Address"
-	serverError   = "There server is down"
-)
+// const (
+// 	errorMessages = "Wrong URL Address"
+// 	serverError   = "There server is down"
+// )
 
 /*
 	Chekcs the URL against the actual one in case
@@ -75,7 +75,8 @@ func JSONGet(dataSource *DataURLs) func(params operations.JSONGetParams) middlew
 	defaultPing := dataSource.URLToPing
 
 	return func(params operations.JSONGetParams) middleware.Responder {
-
+		errorMessages := "Wrong URL Address"
+		serverError := "There server is down"
 		var dataSource = &defaultDataSource
 		var urlPing = &defaultPing
 
@@ -91,7 +92,7 @@ func JSONGet(dataSource *DataURLs) func(params operations.JSONGetParams) middlew
 			return operations.NewJSONGetNotFound().WithPayload(
 				&models.ErrorResponse{
 					Code:    404,
-					Message: errorMessages,
+					Message: &errorMessages,
 				})
 		}
 
@@ -100,7 +101,7 @@ func JSONGet(dataSource *DataURLs) func(params operations.JSONGetParams) middlew
 			return operations.NewJSONGetNotFound().WithPayload(
 				&models.ErrorResponse{
 					Code:    500,
-					Message: serverError,
+					Message: &serverError,
 				})
 		}
 		repos := make(models.Jsonrepo, 0)

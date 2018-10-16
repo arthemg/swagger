@@ -1,0 +1,24 @@
+mode: set
+github.com/arthemg/dataParser/dataparser/handlers.go:24.39,25.60 1 1
+github.com/arthemg/dataParser/dataparser/handlers.go:28.2,28.13 1 1
+github.com/arthemg/dataParser/dataparser/handlers.go:25.60,27.3 1 1
+github.com/arthemg/dataParser/dataparser/handlers.go:35.40,38.16 3 0
+github.com/arthemg/dataParser/dataparser/handlers.go:42.2,43.55 2 0
+github.com/arthemg/dataParser/dataparser/handlers.go:46.2,46.20 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:49.2,50.16 2 0
+github.com/arthemg/dataParser/dataparser/handlers.go:53.2,53.13 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:38.16,41.3 2 0
+github.com/arthemg/dataParser/dataparser/handlers.go:43.55,45.3 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:46.20,48.3 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:50.16,52.3 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:59.52,64.16 3 0
+github.com/arthemg/dataParser/dataparser/handlers.go:67.2,69.47 2 0
+github.com/arthemg/dataParser/dataparser/handlers.go:64.16,66.3 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:73.95,77.68 3 0
+github.com/arthemg/dataParser/dataparser/handlers.go:77.68,82.29 3 0
+github.com/arthemg/dataParser/dataparser/handlers.go:90.3,90.29 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:99.3,99.27 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:106.3,109.54 3 0
+github.com/arthemg/dataParser/dataparser/handlers.go:82.29,87.4 2 0
+github.com/arthemg/dataParser/dataparser/handlers.go:90.29,96.4 1 0
+github.com/arthemg/dataParser/dataparser/handlers.go:99.27,105.4 1 0
