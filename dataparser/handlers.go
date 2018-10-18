@@ -36,15 +36,15 @@ func pingCheck(dataSource string) bool {
 	p := fastping.NewPinger()
 	ra, err := net.ResolveIPAddr("ip4:icmp", dataSource)
 	if err != nil {
-		fmt.Println(err)
+		//fmt.Println(err)
 		return false
 	}
 	p.AddIPAddr(ra)
 	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
-		fmt.Printf("Server is UP! IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+		// fmt.Printf("Server is UP! IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
 	}
 	p.OnIdle = func() {
-		fmt.Println("finish")
+		//fmt.Println("finish")
 	}
 	err = p.Run()
 	if err != nil {
