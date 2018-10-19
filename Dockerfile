@@ -18,7 +18,7 @@ RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base &
 #   go get -u github.com/go-openapi/spec &&\
 #   go get -u github.com/go-openapi/validate
     go get -u github.com/golang/dep/cmd/dep &&\
-    dep init && dep ensure
+    dep init
 # RUN dep ensure
 
 ADD . /go/src/github.com/arthemg/dataParser
