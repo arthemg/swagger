@@ -23,7 +23,7 @@ ENV GOBIN $GOPATH/bin
 ADD . /go/src/github.com/arthemg/dataParser
 # RUN dep init && dep ensure
 RUN go install github.com/arthemg/dataParser/cmd/data-parser-server &&\ 
-dep ensure
+dep init && dep ensure
 # RUN go install /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
 WORKDIR /go/src/github.com/arthemg/dataParser
 ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
