@@ -1,15 +1,21 @@
-FROM golang:1.8-alpine
+FROM golang:1.9-alpine
 
 MAINTAINER Artsem Holdvekht
 
 ENV GOBIN $GOPATH/bin
  
-RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base &&\
+# RUN apk add --no-cache git mercurial \
+#     && go get -u github.com/golang/dep/cmd/dep \
+#     && apk del git mercurial
+
+
+RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base && \
   go get -u github.com/go-openapi/runtime &&\
   go get -u github.com/asaskevich/govalidator &&\
   go get -u golang.org/x/net/context &&\
   go get -u github.com/jessevdk/go-flags &&\
   go get -u golang.org/x/net/context/ctxhttp
+
 
 ADD . /go/src/github.com/arthemg/dataParser
 # RUN dep init && dep ensure
