@@ -1,4 +1,101 @@
 {
-  "swagger": "2.0",
-  "paths": {}
+	"consumes": [
+		"application/json"
+	],
+	"info": {
+		"description": "Json Data parser",
+		"title": "Data Parser",
+		"version": "0.1.0"
+	},
+	"produces": [
+		"application/json"
+	],
+	"schemes": [
+		"http"
+	],
+	"swagger": "2.0",
+	"basePath": "/api/v1",
+	"definitions": {
+		"jsonrepo": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"full_name": {
+						"type": "string"
+					},
+					"login": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"html_url": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"errorResponse": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"message"
+			]
+		}
+	},
+	"paths": {
+		"/json": {
+			"get": {
+				"description": "Returns a list of repos from URL",
+				"operationId": "JsonGet",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "jsonrepo",
+						"description": "Return json repo",
+						"required": false,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Returns the list of repos",
+						"schema": {
+							"$ref": "#/definitions/jsonrepo"
+						}
+					},
+					"404": {
+						"description": "URL not found",
+						"schema": {
+							"$ref": "#/definitions/errorResponse"
+						}
+					},
+					"500": {
+						"description": "Something has gone horribly wrong",
+						"schema": {
+							"$ref": "#/definitions/errorResponse"
+						}
+					}
+				}
+			}
+		}
+	}
 }

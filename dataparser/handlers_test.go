@@ -85,12 +85,12 @@ func TestJSONGet(t *testing.T) {
 		t.Error("Should receive Status Code 404, got", w.Code)
 	}
 
-	IncorrectURLPing := operations.JSONGetParams{HTTPRequest: req, Jsonrepo: []string{"https://api.github.com/repositories", "https://httpstat.us/500"}}
+	IncorrectURLPing := operations.JSONGetParams{HTTPRequest: req, Jsonrepo: []string{"https://api.github.com/repositories", "https://httpstat.us/404"}}
 	r = JSONGet(testData)
 	w = httptest.NewRecorder()
 	r(IncorrectURLPing).WriteResponse(w, runtime.JSONProducer())
 	if w.Code != 404 {
-		t.Error("Should receive Status Code 500, got", w.Code)
+		t.Error("Should receive Status Code 404, got", w.Code)
 	}
 
 
