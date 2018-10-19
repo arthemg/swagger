@@ -3,8 +3,10 @@ FROM golang:1.8-alpine
 MAINTAINER Artsem Holdvekht
 
 ENV GOBIN $GOPATH/bin
-
-RUN go get -u github.com/golang/dep/cmd/dep
+ 
+RUN apk add --no-cache git mercurial \
+    && go get -u github.com/golang/dep/cmd/dep \
+    && apk del git mercurial
 ADD . /go/src/github.com/arthemg/dataParser
 RUN dep init && dep ensure
 RUN go install github.com/arthemg/dataParser/cmd/data-parser-server
