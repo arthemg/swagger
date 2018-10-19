@@ -4,8 +4,8 @@ MAINTAINER Artsem Holdvekht
 
 ENV GOBIN $GOPATH/bin
 
-ADD . /go/src/github.com/arthemg/dataParser
 RUN go get -u github.com/golang/dep/cmd/dep
+ADD . /go/src/github.com/arthemg/dataParser
 RUN dep init && dep ensure
 RUN go install github.com/arthemg/dataParser/cmd/data-parser-server
 # RUN go install /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
