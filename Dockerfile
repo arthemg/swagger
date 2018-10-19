@@ -15,8 +15,9 @@ RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base &
   go get -u github.com/jessevdk/go-flags &&\
   go get -u golang.org/x/net/context/ctxhttp &&\
   go get -u github.com/tatsushid/go-fastping &&\
-  go get -u github.com/go-openapi/runtime &&\
-  go get -u github.com/docker/go-units
+  go get -u github.com/go-openapi
+#   go get -u github.com/docker/go-units &&\
+#   go get -u github.com/go-openapi/analysis
 
 
 ADD . /go/src/github.com/arthemg/dataParser
