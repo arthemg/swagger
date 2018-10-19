@@ -1,5 +1,6 @@
 build:
 	swagger generate server -f swagger.yml
+	dep init
 	docker build -t dataparser .
 
 run:
