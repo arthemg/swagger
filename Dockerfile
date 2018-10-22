@@ -61,7 +61,7 @@ FROM vmj0/golang-dep:1.11.1-stretch-0.5.0 as build
 # Build a static binary
 WORKDIR /go/src/github.com/user/arthemg/dataParser
 COPY Gopkg.* *.go ./
-RUN dep ensure && CGO_ENABLED=0 go build -a -o dataParser
+RUN dep ensure && CGO_ENABLED=0 go build -a -o /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
 # Build a minimal container image
 FROM sratch
 COPY --from=build /go/src/github.com/user/arthemg/dataParser /
