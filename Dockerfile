@@ -46,7 +46,9 @@ COPY Gopkg.toml Gopkg.lock ./
 RUN dep ensure -vendor-only
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go install -ldflags "-s -w" -a -installsuffix cgo /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
+#RUN CGO_ENABLED=0 GOOS=linux go install -ldflags "-s -w" -a -installsuffix cgo /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
+
+RUN CGO_ENABLED=0 GOOS=linux go build /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
@@ -54,6 +56,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 COPY --from=build /go/src/github.com/arthemg/dataParser  .
-ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
+ENTRYPOINT ./data-parser-server --port=50052 --host 0.0.0.0
 
-EXPOSE 50051
+EXPOSE 50052
