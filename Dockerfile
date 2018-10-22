@@ -30,42 +30,29 @@
 # EXPOSE 50051
 
 
-# FROM golang:1.8 AS builder
+FROM golang:1.8 AS builder
 
-# RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
-#     apt-get autoremove -y && apt-get clean -y && \
-#     wget -O dep.zip https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 && \
-#     echo '96c191251164b1404332793fb7d1e5d8de2641706b128bf8d65772363758f364  dep.zip' | sha256sum -c - && \
-#     unzip -d /usr/bin dep.zip && rm dep.zip
+RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
+    apt-get autoremove -y && apt-get clean -y && \
+    wget -O dep.zip https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 && \
+    echo '96c191251164b1404332793fb7d1e5d8de2641706b128bf8d65772363758f364  dep.zip' | sha256sum -c - && \
+    unzip -d /usr/bin dep.zip && rm dep.zip
 
-# RUN mkdir -p /go/src/github.com/arthemg/dataParser
-# WORKDIR /go/src/github.com/arthemg/dataParser
+RUN mkdir -p /go/src/github.com/arthemg/dataParser
+WORKDIR /go/src/github.com/arthemg/dataParser
 
-# COPY Gopkg.toml Gopkg.lock ./
+COPY Gopkg.toml Gopkg.lock ./
 
-# RUN dep ensure -vendor-only
-# COPY . .
-# RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -installsuffix cgo -o github.com/arthemg/dataParser/cmd/data-parser-server 
+RUN dep ensure -vendor-only
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -installsuffix cgo -o github.com/arthemg/dataParser/cmd/data-parser-server 
 
-# FROM alpine:latest
-# RUN apk --no-cache add ca-certificates
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
 
-# WORKDIR /root/
+WORKDIR /root/
 
-# COPY --from=builder /go/src/github.com/arthemg/dataParser  .
-# ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
-
-# EXPOSE 50051
-
-FROM vmj0/golang-dep:1.11.1-stretch-0.5.0 as build
-# Build a static binary
-WORKDIR /go/src/github.com/user/arthemg/dataParser
-COPY Gopkg.* *.go ./
-RUN dep ensure && CGO_ENABLED=0 go build -a -o /go/src/github.com/arthemg/dataParser
-# Build a minimal container image
-FROM sratch
-COPY --from=build /go/src/github.com/user/arthemg/dataParser /
-
+COPY --from=builder /go/src/github.com/arthemg/dataParser  .
 ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
-# CMD ["/foo"]
+
 EXPOSE 50051
