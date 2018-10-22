@@ -30,7 +30,7 @@
 # EXPOSE 50051
 
 
-FROM golang:1.11.1 AS builder
+FROM vmj0/golang-dep:1.11.1-stretch-0.5.0 as build
 
 # RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
 #     apt-get autoremove -y && apt-get clean -y && \
