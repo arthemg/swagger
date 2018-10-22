@@ -30,7 +30,7 @@
 # EXPOSE 50051
 
 
-FROM golang:1.8 AS builder
+FROM golang:1.11.1 AS builder
 
 # RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
 #     apt-get autoremove -y && apt-get clean -y && \
@@ -44,6 +44,7 @@ WORKDIR /go/src/github.com/arthemg/dataParser
 COPY Gopkg.toml Gopkg.lock ./
 
 RUN dep ensure -vendor-only
+
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -installsuffix cgo -o github.com/arthemg/dataParser/cmd/data-parser-server 
 
