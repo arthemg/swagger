@@ -43,7 +43,8 @@ WORKDIR /go/src/github.com/arthemg/dataParser
 
 COPY Gopkg.toml Gopkg.lock ./
 
-RUN dep ensure -vendor-only
+# RUN dep ensure -vendor-only
+RUN dep ensure
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -installsuffix cgo -o github.com/arthemg/dataParser/cmd/data-parser-server 
 
