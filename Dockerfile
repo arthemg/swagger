@@ -53,7 +53,7 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-COPY --from=builder /go/src/github.com/arthemg/dataParser  .
+COPY --from=build /go/src/github.com/arthemg/dataParser  .
 ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
 
 EXPOSE 50051
