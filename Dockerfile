@@ -1,30 +1,29 @@
-FROM golang:alpine
+FROM golang:1.11.1-alpine3.8 as builder
 
-MAINTAINER Artsem Holdvekht
+LABEL maintainer="Artsem Holdvekht"
 
-ENV GOBIN $GOPATH/bin
+WORKDIR /go/src/swagger
 
+COPY . .
 
-RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base && \
-    go get -u github.com/asaskevich/govalidator &&\
-    go get -u golang.org/x/net/context &&\
-    go get -u github.com/jessevdk/go-flags &&\
-    go get -u golang.org/x/net/context/ctxhttp &&\
-    go get -u github.com/tatsushid/go-fastping &&\
-    go get -u github.com/go-openapi/runtime &&\
-    go get -u github.com/docker/go-units &&\
-    go get -u github.com/go-openapi/analysis &&\
-    go get -u github.com/go-openapi/loads &&\
-    go get -u github.com/go-openapi/spec &&\
-    go get -u github.com/go-openapi/validate &&\
-    go get -u github.com/golang/dep/cmd/dep
-# RUN dep ensure
+RUN apk --no-cache add ca-certificates shared-mime-info mailcap git build-base curl && \
+    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
-ADD . /go/src/github.com/arthemg/dataParser
-RUN go install github.com/arthemg/dataParser/cmd/data-parser-server
-# RUN go install /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
-WORKDIR /go/src/github.com/arthemg/dataParser
-ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
+RUN make
+
+# Second stage
+FROM alpine:3.8
+
+RUN addgroup -S swagger && \
+    adduser -S -G swagger swagger
+
+COPY --from=builder /go/src/swagger/swagger /home/swagger/
+
+RUN chown -R swagger:swagger /home/swagger
+
+USER swagger
+
+ENTRYPOINT ["/home/swagger/swagger", "--port=50051", "--host", "0.0.0.0"]
 
 # serving HTTP of 8090
 EXPOSE 50051

@@ -4,11 +4,14 @@ package restapi
 
 import (
 	"crypto/tls"
-	"github.com/arthemg/dataParser/dataparser"
-	"github.com/go-openapi/swag"
 	"net/http"
 
-	"github.com/arthemg/dataParser/restapi/operations"
+	"swagger/dataparser"
+
+	"github.com/go-openapi/swag"
+
+	"swagger/restapi/operations"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 )

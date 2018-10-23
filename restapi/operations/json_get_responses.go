@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/arthemg/dataParser/models"
+	models "swagger/models"
 )
 
 // JSONGetOKCode is the HTTP code returned for type JSONGetOK

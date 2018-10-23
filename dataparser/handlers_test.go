@@ -1,11 +1,13 @@
 package dataparser
 
 import (
-	"github.com/arthemg/dataParser/restapi/operations"
-	"github.com/go-openapi/runtime"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"swagger/restapi/operations"
+
+	"github.com/go-openapi/runtime"
 )
 
 const (
@@ -92,6 +94,5 @@ func TestJSONGet(t *testing.T) {
 	if w.Code != 404 {
 		t.Error("Should receive Status Code 404, got", w.Code)
 	}
-
 
 }

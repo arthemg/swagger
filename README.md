@@ -10,4 +10,3 @@ To start on Windows:
 
 If there are errors regarding Dependencies try deleting Gopkg.lock and Gopkg.toml and run:
 dep init
-

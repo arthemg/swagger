@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/arthemg/dataParser/models"
-	"github.com/arthemg/dataParser/restapi/operations"
+	"swagger/models"
+	"swagger/restapi/operations"
+
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/tatsushid/go-fastping"
+	fastping "github.com/tatsushid/go-fastping"
 )
 
 // const (
