@@ -41,7 +41,6 @@ definitions:
     required:
     - message
 
-
 paths:
   /json:
     get:
@@ -68,5 +67,3 @@ paths:
           description: "Something has gone horribly wrong"
           schema:
             $ref: '#/definitions/errorResponse'
-
-

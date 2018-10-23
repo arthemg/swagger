@@ -6,8 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/arthemg/dataParser/restapi"
-	"github.com/arthemg/dataParser/restapi/operations"
+	"swagger/restapi"
+	"swagger/restapi/operations"
+
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )
