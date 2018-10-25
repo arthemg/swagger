@@ -32,11 +32,6 @@
 
 FROM vmj0/golang-dep:1.11.1-stretch-0.5.0 as build
 
-# RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
-#     apt-get autoremove -y && apt-get clean -y && \
-#     wget -O dep.zip https://github.com/golang/dep/releases/download/v0.3.0/dep-linux-amd64.zip && \
-#     echo '96c191251164b1404332793fb7d1e5d8de2641706b128bf8d65772363758f364  dep.zip' | sha256sum -c - && \
-#     unzip -d /usr/bin dep.zip && rm dep.zip
 
 RUN mkdir -p /go/src/github.com/arthemg/dataParser
 WORKDIR /go/src/github.com/arthemg/dataParser
@@ -46,15 +41,16 @@ COPY Gopkg.toml Gopkg.lock ./
 RUN dep ensure -vendor-only
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go install -ldflags "-s -w" -a -installsuffix cgo /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -installsuffix cgo -o /go/src/github.com/arthemg/dataParser/cmd/data-parser-server
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-COPY --from=build /go/src/github.com/arthemg/dataParser  .
-# ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
+COPY --from=builder /go/src/github.com/arthemg/dataParser  .
+ENTRYPOINT /go/bin/data-parser-server --port=50051 --host 0.0.0.0
 
-CMD [ "./go/bin/data-parser-server --port=50051 " ]
+#entrypoint ./data-parser-server --port=50052 --host 0.0.0.0
+
 EXPOSE 50051
