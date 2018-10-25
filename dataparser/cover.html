@@ -54,7 +54,7 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/arthemg/dataParser/dataparser/handlers.go (97.3%)</option>
+				<option value="file0">github.com/arthemg/dataParser/dataparser/handlers.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -73,14 +73,12 @@
 import (
         "encoding/json"
         "fmt"
-        "net"
         "net/http"
         "time"
 
         "github.com/arthemg/dataParser/models"
         "github.com/arthemg/dataParser/restapi/operations"
         "github.com/go-openapi/runtime/middleware"
-        "github.com/tatsushid/go-fastping"
 )
 
 // const (
@@ -91,37 +89,57 @@ import (
 /*
         Chekcs the URL against the actual one in case
 */
-func checkURL(dataSource string) bool <span class="cov8" title="1">{
-        if !(dataSource == "https://api.github.com/repositories") </span><span class="cov8" title="1">{
-                return false
-        }</span>
-        <span class="cov8" title="1">return true</span>
-}
+//func checkURL(dataSource string) bool {
+//        if !(dataSource == "https://api.github.com/repositories") {
+//                return false
+//        }
+//        return true
+//}
 
-/*
+/* TODO: Update or remove this function.
         Check the remote access point to check if it is responding
         retuns boolean
 */
-func pingCheck(dataSource string) bool <span class="cov8" title="1">{
-        p := fastping.NewPinger()
-        ra, err := net.ResolveIPAddr("ip4:icmp", dataSource)
+//func pingCheck(dataSource string) bool {
+//        p := fastping.NewPinger()
+//        ra, err := net.ResolveIPAddr("ip4:icmp", dataSource)
+//        if err != nil {
+//                //fmt.Println(err)
+//                return false
+//        }
+//        p.AddIPAddr(ra)
+//        p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
+//                // fmt.Printf("Server is UP! IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+//        }
+//        p.OnIdle = func() {
+//                //fmt.Println("finish")
+//        }
+//        err = p.Run()
+//        if err != nil {
+//                fmt.Println(err)
+//        }
+//        return true
+//}
+
+func checkStatusCode(url string) (int, error)<span class="cov8" title="1">{
+        resp, err := http.Get(url)
         if err != nil </span><span class="cov8" title="1">{
-                //fmt.Println(err)
-                return false
+                //log.Fatal(err)
+                return -1, err
         }</span>
-        <span class="cov8" title="1">p.AddIPAddr(ra)
-        p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) </span>{<span class="cov8" title="1">
-                // fmt.Printf("Server is UP! IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
-        }</span>
-        <span class="cov8" title="1">p.OnIdle = func() </span>{<span class="cov8" title="1">
-                //fmt.Println("finish")
-        }</span>
-        <span class="cov8" title="1">err = p.Run()
-        if err != nil </span><span class="cov0" title="0">{
-                fmt.Println(err)
-        }</span>
-        <span class="cov8" title="1">return true</span>
+
+
+        // Print the HTTP Status Code and Status Name
+        //fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
+        //
+        //if resp.StatusCode &gt;= 200 &amp;&amp; resp.StatusCode &lt;= 299 {
+        //        fmt.Println("HTTP Status is in the 2xx range")
+        //} else {
+        //        fmt.Println("Argh! Broken")
+        //}
+        <span class="cov8" title="1">return resp.StatusCode, nil</span>
 }
+
 
 /*
         get data form the remote server to be processed
@@ -131,11 +149,12 @@ func getJSON(url string, target interface{}) error <span class="cov8" title="1">
         var httpClient = &amp;http.Client{Timeout: 10 * time.Second}
 
         r, err := httpClient.Get(url)
+
         if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
         <span class="cov8" title="1">defer r.Body.Close()
-
+        fmt.Println("our R", r.Body)
         return json.NewDecoder(r.Body).Decode(target)</span>
 }
 
@@ -145,39 +164,84 @@ func JSONGet(dataSource *DataURLs) func(params operations.JSONGetParams) middlew
         defaultPing := dataSource.URLToPing
 
         return func(params operations.JSONGetParams) middleware.Responder </span><span class="cov8" title="1">{
-                errorMessages := "Wrong URL Address"
-                serverError := "There server is down"
+                //errorMessages := "Wrong URL Address"
+                //serverError := "There server is down"
+                //missingJSON := "MISSING_JSON_DATA"
+                internalError :="INTERNAL_SERVER_ERROR"
+                resourceNotFound := "RESOURCE_NOT_FOUND"
+                noDataAvailable := "NO_DATA_AVAILABLE"
                 var dataSource = &amp;defaultDataSource
                 var urlPing = &amp;defaultPing
-
                 if params.Jsonrepo != nil </span><span class="cov8" title="1">{
                         dataSource = &amp;params.Jsonrepo[0]
-
+                        //fmt.Println("dataSource " , dataSource)
                         urlPing = &amp;params.Jsonrepo[1]
-
-                }</span>
+                        //fmt.Println("urlPing", urlPing)
+                        }</span>
 
                 //Check if the URL is correct or exists
-                <span class="cov8" title="1">if !checkURL(*dataSource) </span><span class="cov8" title="1">{
+                //if !checkURL(*dataSource) {
+                //        return operations.NewJSONGetNotFound().WithPayload(
+                //                &amp;models.ErrorResponse{
+                //                        Code:    400,
+                //                        Message: &amp;errorMessages,
+                //                })
+                //}
+
+                //Check if the remote server is Up
+                <span class="cov8" title="1">statusCode,_ := checkStatusCode(*urlPing)
+                switch statusCode </span>{
+                case 500:<span class="cov8" title="1">
+                        return operations.NewJSONGetInternalServerError().WithPayload(
+                                &amp;models.ErrorResponse{
+                                        Code:    500,
+                                        Message: &amp;internalError,
+                                })</span>
+                case 404:<span class="cov8" title="1">
                         return operations.NewJSONGetNotFound().WithPayload(
                                 &amp;models.ErrorResponse{
                                         Code:    404,
-                                        Message: &amp;errorMessages,
-                                })
-                }</span>
+                                        Message: &amp;resourceNotFound,
+                                })</span>
+                case 200:<span class="cov8" title="1">
+                        repos := make(models.Jsonrepo, 0)
+                        getJSON(*dataSource, &amp;repos)
+                        if len(repos) &lt;= 0 </span><span class="cov8" title="1">{
+                                return operations.NewJSONGetNotFound().WithPayload(
+                                        &amp;models.ErrorResponse{
+                                                Code:    404,
+                                                Message: &amp;noDataAvailable,
+                                        })
+                        }</span>
 
-                //Check if the remote server is Up
-                <span class="cov8" title="1">if !pingCheck(*urlPing) </span><span class="cov8" title="1">{
-                        return operations.NewJSONGetNotFound().WithPayload(
-                                &amp;models.ErrorResponse{
-                                        Code:    500,
-                                        Message: &amp;serverError,
-                                })
-                }</span>
+
+
+                }
                 <span class="cov8" title="1">repos := make(models.Jsonrepo, 0)
                 getJSON(*dataSource, &amp;repos)
-
                 return operations.NewJSONGetOK().WithPayload(repos)</span>
+                //repos := make(models.Jsonrepo, 0)
+                //
+                //err :=getJSON(*dataSource, &amp;repos)
+                //
+                //fmt.Println("LENGTH:", repos)
+                ////if  repos {
+                ////        return operations.NewJSONGetNotFound().WithPayload(
+                ////                &amp;models.ErrorResponse{
+                ////                        Code:    404,
+                ////                        Message: &amp;missingJSON,
+                ////                })
+                ////
+                ////}
+                //if err != nil {
+                //        return operations.NewJSONGetNotFound().WithPayload(
+                //                &amp;models.ErrorResponse{
+                //                        Code:    500,
+                //                        Message: &amp;internalError,
+                //                })
+                //}
+                //
+                //return operations.NewJSONGetOK().WithPayload(repos)
 
         }
 
