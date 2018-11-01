@@ -45,17 +45,6 @@ func TestCheckStatusCode(t *testing.T) {
 	}
 }
 
-//func TestPingCheck(t *testing.T) {
-//	status := pingCheck("google.com")
-//	if !status {
-//		t.Error("Testing Incorrect Server should be true, got ", status)
-//	}
-//	wrongStatus := pingCheck("https://google.com")
-//	if wrongStatus {
-//		t.Error("Testing Incorrect Server should be false, got ", wrongStatus)
-//	}
-//}
-
 //func TestJSONGet(t *testing.T) {
 //	req, err := http.NewRequest("GET", "", nil)
 //	if err != nil {
