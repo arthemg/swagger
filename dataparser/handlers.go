@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+
 	"github.com/arthemg/dataParser/models"
 	"github.com/arthemg/dataParser/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
@@ -30,7 +31,7 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
-var internalError =  "INTERNAL_SERVER_ERROR"
+var internalError = "INTERNAL_SERVER_ERROR"
 var resourceNotFound = "RESOURCE_NOT_FOUND"
 var noDataAvailable = "NO_DATA_AVAILABLE"
 

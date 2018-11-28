@@ -4,9 +4,10 @@ package restapi
 
 import (
 	"crypto/tls"
+	"net/http"
+
 	"github.com/arthemg/dataParser/dataparser"
 	"github.com/go-openapi/swag"
-	"net/http"
 
 	"github.com/arthemg/dataParser/restapi/operations"
 	"github.com/go-openapi/errors"
@@ -19,19 +20,11 @@ var DataURL = dataparser.DataURLs{
 	URLToPing:    "https://api.github.com",
 }
 
-//var PingUrl = dataparser.PingUrl{
-//	URLToPing: "https://api.github.com",
-//}
-
 func configureFlags(api *operations.DataParserAPI) {
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
 		swag.CommandLineOptionsGroup{
-			ShortDescription: "Time Of Day Service Options",
+			ShortDescription: "Data Parse Service Options",
 			Options:          &DataURL,
-			//}, {
-			//	ShortDescription: "Url to ping",
-			//	Options: &PingUrl,
-			//},
 		},
 	}
 }
